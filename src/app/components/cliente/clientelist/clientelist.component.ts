@@ -2,56 +2,54 @@ import { Component, TemplateRef, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { MdbModalModule, MdbModalRef, MdbModalService, } from 'mdb-angular-ui-kit/modal';
-import { AutoresdetailsComponent } from '../autoresdetails/autoresdetails.component';
+import { MdbModalModule, MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { MdbAccordionModule } from 'mdb-angular-ui-kit/accordion';
-import Swal from 'sweetalert2';
-import { Autor } from '../../../models/autor'; 
-import { AutorService } from '../../../services/autor/autor.service';
+import { ClientedetailsComponent } from '../clientedetails/clientedetails.component';
+import { Cliente } from '../../../models/cliente';
+import { ClienteService } from '../../../services/cliente.service';
+import Swal, { SweetAlertResult } from 'sweetalert2';
 
 @Component({
-  selector: 'app-autorlist',
+  selector: 'app-clientelist',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
     RouterLink,
     MdbModalModule,
-    AutoresdetailsComponent,
+    ClientedetailsComponent,
     MdbAccordionModule
   ],
-  templateUrl: './autoreslist.component.html',
-  styleUrl: './autoreslist.component.scss',
+  templateUrl: './clientelist.component.html',
+  styleUrls: ['./clientelist.component.scss'],  // Corrigido para styleUrls
 })
+export class ClientelistComponent {
+  modalService = inject(MdbModalService);
+  service = inject(ClienteService);
 
-export class AutoreslistComponent {
-  modalService = inject(MdbModalService); 
-  service = inject(AutorService);
+  @ViewChild('modalDetalhe') modalDetalhe!: TemplateRef<any>;
 
-  @ViewChild('modalDetalhe') modalDetalhe!: TemplateRef<any>; 
+  modalRef!: MdbModalRef<any>;
 
-  modalRef!: MdbModalRef<any>; 
-
-  lista: Autor[] = [];
-  objEdit!: Autor;
+  lista: Cliente[] = [];
+  objEdit!: Cliente;
 
   constructor() {
     this.listAll();
   }
 
-  listAll(){
-      this.service.listAll().subscribe({
-        next: lista => {
-          console.log('b');
-          this.lista = lista;
-        },
-        error: erro => {
-          alert('Erro ao carregar listagem de registros!');
-        }
-      });
+  listAll() {
+    this.service.listAll().subscribe({
+      next: lista => {
+        this.lista = lista;
+      },
+      error: erro => {
+        alert('Erro ao carregar listagem de registros!');
+      }
+    });
   }
 
-  deleteById(obj: Autor) {
+  deleteById(obj: Cliente) {
     Swal.fire({
       title: 'Tem certeza que deseja deletar este registro?',
       icon: 'warning',
@@ -59,11 +57,10 @@ export class AutoreslistComponent {
       showDenyButton: true,
       confirmButtonText: 'Sim',
       cancelButtonText: 'Não',
-    }).then((result) => {
+    }).then((result: SweetAlertResult) => {
       if (result.isConfirmed) {
         this.service.delete(obj.id).subscribe({
           next: retorno => {
-  
             Swal.fire({
               title: 'Deletado com sucesso!',
               icon: 'success',
@@ -72,10 +69,8 @@ export class AutoreslistComponent {
             this.listAll();
           },
           error: erro => {
-  
             alert(erro.status);
             console.log(erro);
-           
             Swal.fire({
               title: 'ERRO!',
               icon: 'error',
@@ -87,19 +82,21 @@ export class AutoreslistComponent {
     });
   }
 
-  new(){
-    this.objEdit = new Autor(0,"");
+  new() {
+    this.objEdit = new Cliente(0,"",0,"");
     this.modalRef = this.modalService.open(this.modalDetalhe);
   }
 
-  edit(obj: Autor){
-    this.objEdit = Object.assign({}, obj); 
-    this.modalRef = this.modalService.open(this.modalDetalhe);
+  edit(obj: Cliente) {
+    this.objEdit = Object.assign({}, obj);
+    this.modalRef = this.modalService.open(this.modalDetalhe) ;
   }
 
-  retornoDetalhe(obj: Autor){
+  retornoDetalhe(obj: Cliente) {
     this.listAll();
-
     this.modalRef.close();
   }
+
+
+  
 }

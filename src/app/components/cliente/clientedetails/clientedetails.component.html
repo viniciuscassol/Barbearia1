@@ -5,14 +5,23 @@
     <div class="col-lg-12 centralizar topo">
       <div class="card">
         <div class="card-body">
-          <h3>Clientes:</h3>
+          <h3>Cadastro de Autores:</h3>
           <br>
+          
           <mdb-form-control>
             <input mdbInput type="text" id="usuario" class="form-control" [(ngModel)]="obj.nome" />
             <label mdbLabel class="form-label" for="usuario">Nome</label>
-          </mdb-form-control>
+          </mdb-form-control>  
           <br />
-
+          <mdb-form-control>
+            <input mdbInput type="text" id="usuario" class="form-control" [(ngModel)]="obj.valor" />
+            <label mdbLabel class="form-label" for="usuario">Valor</label>
+          </mdb-form-control>
+          <br>
+          <mdb-form-control>
+            <input mdbInput type="text" id="usuario" class="form-control" [(ngModel)]="obj.horario" />
+            <label mdbLabel class="form-label" for="usuario">Horario</label>
+          </mdb-form-control>
           <button type="button" class="btn btn-primary btn-rounded" mdbRipple (click)="save()">
             Salvar
           </button>
